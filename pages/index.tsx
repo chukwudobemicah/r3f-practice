@@ -4,6 +4,7 @@ import {
   OrbitControls,
   Text,
   TrackballControls,
+  TransformControls,
   useHelper,
 } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
@@ -19,6 +20,8 @@ export function Scene() {
   });
   return (
     <>
+      <OrbitControls makeDefault />
+
       <ambientLight intensity={0.3} />
       <directionalLight
         ref={directionalLightRef}
@@ -28,8 +31,9 @@ export function Scene() {
         castShadow
       />
       {/* <CustomTorus position={[0, 0, -10]} color="red" /> */}
+      {/* <TransformControls object={torusRef} /> */}
+      {/* <CustomTorusKnot position={[0, 0, -10]} color="red" /> */}
       <CustomTorusKnot sizes={[2, 1, 10]} position={[0, 0, 0]} color="white" />
-      <OrbitControls />
       {/* <TrackballControls /> */}
       {/* <Text characters="abcdefghijklmnopqrstuvwxyz0123456789!">
           hello world!
@@ -146,7 +150,7 @@ const CustomTorusKnot = ({
   sizes?: [number, number, number];
   color?: string;
 }) => {
-  const ref = useRef<Mesh>(null);
+  const ref = useRef(null);
   useFrame((state, delta) => {
     if (ref.current) {
       // Add rotation to the mesh itself
@@ -168,6 +172,7 @@ const CustomTorusKnot = ({
 
   return (
     <>
+      {ref.current && <TransformControls object={ref.current} mode="rotate" />}
       <mesh ref={ref} position={position}>
         <torusKnotGeometry args={sizes} />
         <meshStandardMaterial color={knotColor} />
