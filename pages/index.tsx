@@ -1,21 +1,50 @@
-import { OrbitControls } from "@react-three/drei";
+import {
+  MeshDistortMaterial,
+  MeshWobbleMaterial,
+  OrbitControls,
+  Text,
+  TrackballControls,
+  useHelper,
+} from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
+import { useControls } from "leva";
 import { useRef } from "react";
-import { Mesh } from "three";
+import { DirectionalLight, DirectionalLightHelper, Mesh } from "three";
 
+export function Scene() {
+  const directionalLightRef = useRef<DirectionalLight>(null);
+  useHelper(directionalLightRef, DirectionalLightHelper);
+  const { lightColor } = useControls({
+    lightColor: "white",
+  });
+  return (
+    <>
+      <ambientLight intensity={0.3} />
+      <directionalLight
+        ref={directionalLightRef}
+        position={[0, -10, 5]}
+        intensity={1.5}
+        color={lightColor}
+        castShadow
+      />
+      {/* <CustomTorus position={[0, 0, -10]} color="red" /> */}
+      <CustomTorusKnot sizes={[2, 30]} position={[0, 0, -30]} color="white" />
+      <OrbitControls />
+      {/* <TrackballControls /> */}
+      {/* <Text characters="abcdefghijklmnopqrstuvwxyz0123456789!">
+          hello world!
+        </Text> */}
+    </>
+  );
+}
 export default function Home() {
   return (
-    <main>
-      <Canvas style={{ height: "100vh", width: "100vw", background: "#333" }}>
-        <ambientLight intensity={0.3} />
-        <directionalLight position={[0, -10, 5]} intensity={1.5} castShadow />
-        {/* <CustomTorus position={[0, 0, -10]} color="red" /> */}
-        <CustomTorusKnot
-          sizes={[10, 2, 30]}
-          position={[0, 0, -30]}
-          color="blue"
-        />
-        <OrbitControls />
+    <main className="h-screen w-screen">
+      <Canvas
+        className="w"
+        style={{ height: "100%", width: "100%", background: "#333" }}
+      >
+        <Scene />
       </Canvas>
     </main>
   );
@@ -124,15 +153,26 @@ const CustomTorusKnot = ({
       ref.current.rotation.x += delta * 0.5;
       ref.current.rotation.y += delta * 0.3;
       // Optional: add some gentle floating motion
-      ref.current.position.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.5;
+      // ref.current.position.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.5;
     }
+  });
+  const { knotColor, knotRadius } = useControls({
+    knotColor: "lightblue",
+    knotRadius: {
+      value: 10,
+      min: 0,
+      max: 100,
+      step: 1,
+    },
   });
 
   return (
     <>
       <mesh ref={ref} position={position}>
-        <torusKnotGeometry args={sizes} />
-        <meshStandardMaterial color={color} />
+        <torusKnotGeometry args={[knotRadius, ...sizes]} />
+        {/* <meshStandardMaterial color={color} /> */}
+        <MeshWobbleMaterial factor={5} color={knotColor} />
+        {/* <MeshDistortMaterial factor={5} color={knotColor} /> */}
       </mesh>
     </>
   );
