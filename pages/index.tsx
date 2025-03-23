@@ -28,7 +28,7 @@ export function Scene() {
         castShadow
       />
       {/* <CustomTorus position={[0, 0, -10]} color="red" /> */}
-      <CustomTorusKnot sizes={[2, 30]} position={[0, 0, -30]} color="white" />
+      <CustomTorusKnot sizes={[2, 1, 10]} position={[0, 0, 0]} color="white" />
       <OrbitControls />
       {/* <TrackballControls /> */}
       {/* <Text characters="abcdefghijklmnopqrstuvwxyz0123456789!">
@@ -169,9 +169,9 @@ const CustomTorusKnot = ({
   return (
     <>
       <mesh ref={ref} position={position}>
-        <torusKnotGeometry args={[knotRadius, ...sizes]} />
-        {/* <meshStandardMaterial color={color} /> */}
-        <MeshWobbleMaterial factor={5} color={knotColor} />
+        <torusKnotGeometry args={sizes} />
+        <meshStandardMaterial color={knotColor} />
+        {/* <MeshWobbleMaterial factor={5} color={knotColor} /> */}
         {/* <MeshDistortMaterial factor={5} color={knotColor} /> */}
       </mesh>
     </>
